@@ -1,5 +1,6 @@
 package com.example.padelwear;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.wear.widget.WearableLinearLayoutManager;
 import android.support.wear.widget.WearableRecyclerView;
@@ -24,8 +25,12 @@ public class MainActivity extends WearableActivity {
                                              @Override
                                              public void onClick(View v) {
                                                  Integer tag = (Integer) v.getTag();
-                                                 Toast.makeText(MainActivity.this, "Elegida opción:" + tag,
-                                                         Toast.LENGTH_SHORT).show();
+                                                 //Toast.makeText(MainActivity.this, "Elegida opción:" + tag, Toast.LENGTH_SHORT).show();
+                                                 switch (tag) {
+                                                     case 1:
+                                                         startActivity(new Intent(MainActivity.this, Confirmacion.class));
+                                                         break;
+                                                 }
                                              }
                                          }
         );
