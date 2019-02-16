@@ -30,6 +30,9 @@ public class MainActivity extends WearableActivity {
                 Integer tag = (Integer) v.getTag();
                 //Toast.makeText(MainActivity.this, "Elegida opción:" + tag, Toast.LENGTH_SHORT).show();
                 switch (tag) {
+                    case 0:
+                        startActivity(new Intent(MainActivity.this, Contador.class));
+                        break;
                     case 1:
                         startActivity(new Intent(MainActivity.this, Confirmacion.class));
                         break;
