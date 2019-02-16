@@ -35,6 +35,7 @@
         <activity android:name=".Confirmacion"/>
         <activity android:name=".Pasos"/>
         <activity android:name=".Historial"/>
+        <activity android:name=".CuentaAtras"/>
     </application>
 
 </manifest>
