@@ -33,6 +33,9 @@ public class MainActivity extends WearableActivity {
                     case 1:
                         startActivity(new Intent(MainActivity.this, Confirmacion.class));
                         break;
+                    case 2:
+                        startActivity(new Intent(MainActivity.this, Historial.class));
+                        break;
                     case 4:
                         startActivity(new Intent(MainActivity.this, Pasos.class));
                         break;
