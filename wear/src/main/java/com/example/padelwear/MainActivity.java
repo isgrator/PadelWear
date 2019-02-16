@@ -37,5 +37,10 @@ public class MainActivity extends WearableActivity {
             }
         });
         lista.setAdapter(adaptador);
+
+        //Gesto de scroll circular
+        lista.setCircularScrollingGestureEnabled(true);
+        lista.setScrollDegreesPerScreen(180);
+        lista.setBezelFraction(1.0f);
     }
 }
