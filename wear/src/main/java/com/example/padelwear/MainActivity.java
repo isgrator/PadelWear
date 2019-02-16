@@ -19,21 +19,23 @@ public class MainActivity extends WearableActivity {
         setContentView(R.layout.activity_main);
         WearableRecyclerView lista = (WearableRecyclerView)
                 findViewById(R.id.lista);
-        lista.setLayoutManager(new WearableLinearLayoutManager(this));
+        //Layouts curvos*********************
+        lista.setEdgeItemsCenteringEnabled(true);
+        //***********************************
+        lista.setLayoutManager(new WearableLinearLayoutManager(this,new CustomLayoutCallback()));
         Adaptador adaptador = new Adaptador(this, elementos);
         adaptador.setOnItemClickListener(new View.OnClickListener() {
-                                             @Override
-                                             public void onClick(View v) {
-                                                 Integer tag = (Integer) v.getTag();
-                                                 //Toast.makeText(MainActivity.this, "Elegida opción:" + tag, Toast.LENGTH_SHORT).show();
-                                                 switch (tag) {
-                                                     case 1:
-                                                         startActivity(new Intent(MainActivity.this, Confirmacion.class));
-                                                         break;
-                                                 }
-                                             }
-                                         }
-        );
+            @Override
+            public void onClick(View v) {
+                Integer tag = (Integer) v.getTag();
+                //Toast.makeText(MainActivity.this, "Elegida opción:" + tag, Toast.LENGTH_SHORT).show();
+                switch (tag) {
+                    case 1:
+                        startActivity(new Intent(MainActivity.this, Confirmacion.class));
+                        break;
+                }
+            }
+        });
         lista.setAdapter(adaptador);
     }
 }
