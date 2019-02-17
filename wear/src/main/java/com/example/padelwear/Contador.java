@@ -17,10 +17,13 @@ import android.widget.TextView;
 import com.example.comun.DireccionesGestureDetector;
 import com.example.comun.Partida;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class Contador extends WearableActivity {
     private Partida partida;
     private TextView misPuntos, misJuegos, misSets,
-            susPuntos, susJuegos, susSets;
+            susPuntos, susJuegos, susSets, hora;
     private Vibrator vibrador;
     private long[] vibrEntrada = {0l, 500};
     private long[] vibrDeshacer = {0l, 500, 500, 500};
@@ -40,6 +43,7 @@ public class Contador extends WearableActivity {
 
         partida = new Partida();
         vibrador = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+        hora = findViewById(R.id.hora);
         misPuntos = (TextView) findViewById(R.id.misPuntos);
         susPuntos = (TextView) findViewById(R.id.susPuntos);
         misJuegos = (TextView) findViewById(R.id.misJuegos);
@@ -167,7 +171,12 @@ public class Contador extends WearableActivity {
     @Override
     public void onEnterAmbient(Bundle ambientDetails) {
         super.onEnterAmbient(ambientDetails);
-        Log.i("isabel","entrando en modo ambiente");
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        hora.setText(c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE));
+        hora.setVisibility(View.VISIBLE);
+
         misPuntos.setTypeface(fuenteFina);
         misPuntos.getPaint().setAntiAlias(false);
 
@@ -190,6 +199,8 @@ public class Contador extends WearableActivity {
     @Override
     public void onExitAmbient() {
         super.onExitAmbient();
+
+        hora.setVisibility(View.GONE);
 
         misPuntos.setTypeface(fuenteNormal);
         misPuntos.getPaint().setAntiAlias(true);
