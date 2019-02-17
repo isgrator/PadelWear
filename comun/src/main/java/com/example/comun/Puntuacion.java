@@ -149,4 +149,22 @@ public class Puntuacion {
         return susSets;
     }
 
+    /////////////////
+
+    public void setMiPuntuacion(byte miPuntuacion) { this.miPuntuacion = miPuntuacion; }
+
+    public void setSuPuntuacion(byte suPuntuacion) { this.suPuntuacion = suPuntuacion; }
+
+    public void setMisJuegos(byte misJuegos) {
+        this.misJuegos = misJuegos;
+    }
+
+    public void setSusJuegos(byte susJuegos) { this.susJuegos = susJuegos; }
+
+    public void setMisSets(byte misSets) {
+        this.misSets = misSets;
+    }
+
+    public void setSusSets(byte susSets) { this.susSets = susSets; }
+
 }

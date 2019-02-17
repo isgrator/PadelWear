@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.DismissOverlayView;
 import android.util.Log;
@@ -19,6 +20,15 @@ import android.widget.TextView;
 
 import com.example.comun.DireccionesGestureDetector;
 import com.example.comun.Partida;
+import com.google.android.gms.wearable.DataClient;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
+import com.google.android.gms.wearable.Wearable;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,6 +44,16 @@ public class Contador extends WearableActivity {
 
     private DismissOverlayView dismissOverlay;
     private GestureDetector detector;
+
+    //Sincronizar tanteo de la partida desde el reloj al móvil*******************
+    private static final String WEAR_PUNTUACION = "/puntuacion";
+    private static final String KEY_MIS_PUNTOS="com.example.padel.key.mis_puntos";
+    private static final String KEY_MIS_JUEGOS="com.example.padel.key.mis_juegos";
+    private static final String KEY_MIS_SETS="com.example.padel.key.mis_sets";
+    private static final String KEY_SUS_PUNTOS="com.example.padel.key.sus_puntos";
+    private static final String KEY_SUS_JUEGOS="com.example.padel.key.sus_juegos";
+    private static final String KEY_SUS_SETS="com.example.padel.key.sus_sets";
+    //***************************************************************************
 
     //Modo ambiente****************************************************************************
     private Typeface fuenteNormal = Typeface.create("sans-serif", Typeface.NORMAL);
@@ -175,6 +195,7 @@ public class Contador extends WearableActivity {
         susJuegos.setText(partida.getSusJuegos());
         misSets.setText(partida.getMisSets());
         susSets.setText(partida.getSusSets());
+        sincronizaDatos();
     }
 
     @Override
@@ -252,4 +273,52 @@ public class Contador extends WearableActivity {
         if (_broadcastReceiver != null)
             unregisterReceiver(_broadcastReceiver);
     }
+
+    // Sincronizar tanteo de la partida desde el reloj al móvil ***************
+    private void sincronizaDatos() {
+        Log.d("Padel Wear", "Sincronizando");
+        PutDataMapRequest putDataMapReq = PutDataMapRequest.create(WEAR_PUNTUACION);
+        putDataMapReq.getDataMap().putByte(KEY_MIS_PUNTOS, partida.getMisPuntosByte());
+        putDataMapReq.getDataMap().putByte(KEY_MIS_JUEGOS, partida.getMisJuegosByte());
+        putDataMapReq.getDataMap().putByte(KEY_MIS_SETS, partida.getMisSetsByte());
+        putDataMapReq.getDataMap().putByte(KEY_SUS_PUNTOS, partida.getSusPuntosByte());
+        putDataMapReq.getDataMap().putByte(KEY_SUS_JUEGOS, partida.getSusJuegosByte());
+        putDataMapReq.getDataMap().putByte(KEY_SUS_SETS, partida.getSusSetsByte());
+
+        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+        Wearable.getDataClient(getApplicationContext()).putDataItem(putDataReq);
+    }
+
+    /*
+    @Override public void onDataChanged(DataEventBuffer eventos) {
+        for (DataEvent evento : eventos) {
+            if (evento.getType() == DataEvent.TYPE_CHANGED) {
+                DataItem item = evento.getDataItem();
+
+                if (item.getUri().getPath().equals(WEAR_PUNTUACION)) {
+                    DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
+                    partida.setMisPuntosByte(dataMap.getByte(KEY_MIS_PUNTOS));
+                    partida.setMisJuegosByte(dataMap.getByte(KEY_MIS_JUEGOS));
+                    partida.setMisSetsByte(dataMap.getByte(KEY_MIS_SETS));
+                    partida.setSusPuntosByte(dataMap.getByte(KEY_SUS_PUNTOS));
+                    partida.setSusJuegosByte(dataMap.getByte(KEY_SUS_JUEGOS));
+                    partida.setSusSetsByte(dataMap.getByte(KEY_SUS_SETS));
+                }
+
+            } else if (evento.getType() == DataEvent.TYPE_DELETED) {
+                // Algún ítem ha sido borrado
+            }
+        }
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        Wearable.getDataClient(this).addListener(this);
+    }
+
+    @Override protected void onPause() {
+        super.onPause();
+        Wearable.getDataClient(this).removeListener(this);
+    }*/
+    //************************************************************************
 }

@@ -71,4 +71,47 @@ public class Partida {
     public String getSusSets() {
         return String.valueOf(puntos.lastElement().getSusSets());
     }
+
+    //Sincronización de datos entre reloj y móvil*******************************************
+    public byte getMisPuntosByte(){
+        return puntos.lastElement().getMiPuntuacion();
+    }
+    public byte getMisJuegosByte(){
+        return puntos.lastElement().getMisJuegos();
+    }
+    public byte getMisSetsByte(){
+        return puntos.lastElement().getMisSets();
+    }
+    public byte getSusPuntosByte(){
+        return puntos.lastElement().getSuPuntuacion();
+    }
+    public byte getSusJuegosByte(){
+        return puntos.lastElement().getSusJuegos();
+    }
+    public byte getSusSetsByte(){
+        return puntos.lastElement().getSusSets();
+    }
+
+    ////////////////////////////////
+
+    public void setMisPuntosByte(byte data){
+        puntos.lastElement().setMiPuntuacion(data);
+    }
+    public void setMisJuegosByte(byte data){
+        puntos.lastElement().setMisJuegos(data);
+    }
+    public void setMisSetsByte(byte data){
+        puntos.lastElement().setMisSets(data);
+    }
+    public void setSusPuntosByte(byte data){
+        puntos.lastElement().setSuPuntuacion(data);
+    }
+    public void setSusJuegosByte(byte data){
+        puntos.lastElement().setSusJuegos(data);
+    }
+    public void setSusSetsByte(byte data){
+        puntos.lastElement().setSusSets(data);
+    }
+
+    //**************************************************************************************
 }
