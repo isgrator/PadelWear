@@ -32,6 +32,11 @@
                 <data android:scheme="wear" android:host="*" android:pathPrefix="/arrancar_actividad"/>
             </intent-filter>
         </service>
+        <receiver android:name=".WearReceiver" android:exported="false">
+            <intent-filter>
+                <action android:name="com.example.notificaciones.ACTION_DEMAND"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
