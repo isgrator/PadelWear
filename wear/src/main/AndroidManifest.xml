@@ -40,6 +40,7 @@
         <activity android:name=".SwipeDismiss"/>
         <activity android:name=".Contador"
             android:theme="@style/AppThemeNoSwipeToDismiss"/>
+        <activity android:name=".Jugadores"/>
 
         <service android:name=".ServicioEscuchador">
             <intent-filter>
