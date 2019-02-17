@@ -184,6 +184,7 @@ public class Contador extends WearableActivity {
         /*Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         hora.setText(c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE));*/
+        hora.setText(_sdfWatchTime.format(new Date()));
         hora.setVisibility(View.VISIBLE);
 
         misPuntos.setTypeface(fuenteFina);
