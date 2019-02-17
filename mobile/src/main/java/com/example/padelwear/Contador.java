@@ -22,6 +22,8 @@ import com.google.android.gms.wearable.DataItem;
 import com.google.android.gms.wearable.DataItemBuffer;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.PutDataMapRequest;
+import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
 public class Contador extends Activity implements DataClient.OnDataChangedListener{
@@ -155,9 +157,24 @@ public class Contador extends Activity implements DataClient.OnDataChangedListen
         susJuegos.setText(partida.getSusJuegos());
         misSets.setText(partida.getMisSets());
         susSets.setText(partida.getSusSets());
+        sincronizaDatos();
     }
 
     //Sincronización de datos entre reloj y móvil***********************************
+    private void sincronizaDatos() {
+        Log.d("Padel Wear", "Sincronizando");
+        PutDataMapRequest putDataMapReq = PutDataMapRequest.create(WEAR_PUNTUACION);
+        putDataMapReq.getDataMap().putByte(KEY_MIS_PUNTOS, partida.getMisPuntosByte());
+        putDataMapReq.getDataMap().putByte(KEY_MIS_JUEGOS, partida.getMisJuegosByte());
+        putDataMapReq.getDataMap().putByte(KEY_MIS_SETS, partida.getMisSetsByte());
+        putDataMapReq.getDataMap().putByte(KEY_SUS_PUNTOS, partida.getSusPuntosByte());
+        putDataMapReq.getDataMap().putByte(KEY_SUS_JUEGOS, partida.getSusJuegosByte());
+        putDataMapReq.getDataMap().putByte(KEY_SUS_SETS, partida.getSusSetsByte());
+
+        PutDataRequest putDataReq = putDataMapReq.asPutDataRequest();
+        Wearable.getDataClient(getApplicationContext()).putDataItem(putDataReq);
+    }
+
     @Override public void onDataChanged(DataEventBuffer eventos) {
         for (DataEvent evento : eventos) {
             if (evento.getType() == DataEvent.TYPE_CHANGED) {

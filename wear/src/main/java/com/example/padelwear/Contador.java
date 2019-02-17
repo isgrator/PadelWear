@@ -20,10 +20,13 @@ import android.widget.TextView;
 
 import com.example.comun.DireccionesGestureDetector;
 import com.example.comun.Partida;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wearable.DataClient;
 import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.DataItemBuffer;
 import com.google.android.gms.wearable.DataMap;
 import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.PutDataMapRequest;
@@ -34,7 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Contador extends WearableActivity {
+public class Contador extends WearableActivity implements DataClient.OnDataChangedListener{
     private Partida partida;
     private TextView misPuntos, misJuegos, misSets,
             susPuntos, susJuegos, susSets, hora;
@@ -180,6 +183,36 @@ public class Contador extends WearableActivity {
         //Evitar que entre en suspensión tras unos segundos
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+
+        //acceder al ítem de puntuación al arrancar la actividad e inicializar el valor del tanteo
+        Task<DataItemBuffer> task = Wearable.getDataClient(getApplicationContext()).getDataItems();
+        task.addOnCompleteListener(new OnCompleteListener<DataItemBuffer>() {
+            @Override public void onComplete(@NonNull Task<DataItemBuffer> task) {
+                for (DataItem dataItem: task.getResult()) {
+                    if (dataItem.getUri().getPath().equals(WEAR_PUNTUACION)) {
+                        DataMapItem dataMapItem = DataMapItem.fromDataItem(dataItem);
+                        //contador = dataMapItem.getDataMap().getInt(KEY_CONTADOR);
+                        partida.setMisPuntosByte(dataMapItem.getDataMap().getByte(KEY_MIS_PUNTOS));
+                        partida.setMisJuegosByte(dataMapItem.getDataMap().getByte(KEY_MIS_JUEGOS));
+                        partida.setMisSetsByte(dataMapItem.getDataMap().getByte(KEY_MIS_SETS));
+                        partida.setSusPuntosByte(dataMapItem.getDataMap().getByte(KEY_SUS_PUNTOS));
+                        partida.setSusJuegosByte(dataMapItem.getDataMap().getByte(KEY_SUS_JUEGOS));
+                        partida.setSusSetsByte(dataMapItem.getDataMap().getByte(KEY_SUS_SETS));
+                        runOnUiThread(new Runnable() {
+                            @Override public void run() {
+                                actualizaNumeros();
+                            }
+                        });
+                    }
+                }
+                task.getResult().release();
+            }
+        });
+
+        //*******************************************************************************************
+
+
+
     }
 
     // Detectar pulsaciones largas
@@ -289,7 +322,6 @@ public class Contador extends WearableActivity {
         Wearable.getDataClient(getApplicationContext()).putDataItem(putDataReq);
     }
 
-    /*
     @Override public void onDataChanged(DataEventBuffer eventos) {
         for (DataEvent evento : eventos) {
             if (evento.getType() == DataEvent.TYPE_CHANGED) {
@@ -303,6 +335,11 @@ public class Contador extends WearableActivity {
                     partida.setSusPuntosByte(dataMap.getByte(KEY_SUS_PUNTOS));
                     partida.setSusJuegosByte(dataMap.getByte(KEY_SUS_JUEGOS));
                     partida.setSusSetsByte(dataMap.getByte(KEY_SUS_SETS));
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            actualizaNumeros();
+                        }
+                    });
                 }
 
             } else if (evento.getType() == DataEvent.TYPE_DELETED) {
@@ -319,6 +356,6 @@ public class Contador extends WearableActivity {
     @Override protected void onPause() {
         super.onPause();
         Wearable.getDataClient(this).removeListener(this);
-    }*/
+    }
     //************************************************************************
 }
