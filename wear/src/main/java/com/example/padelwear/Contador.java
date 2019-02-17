@@ -1,7 +1,10 @@
 package com.example.padelwear;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 import com.example.comun.DireccionesGestureDetector;
 import com.example.comun.Partida;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -31,8 +35,12 @@ public class Contador extends WearableActivity {
     private DismissOverlayView dismissOverlay;
     private GestureDetector detector;
 
+    //Modo ambiente****************************************************************************
     private Typeface fuenteNormal = Typeface.create("sans-serif", Typeface.NORMAL);
     private Typeface fuenteFina = Typeface.create("sans-serif-thin", Typeface.NORMAL);
+    BroadcastReceiver _broadcastReceiver;
+    private final SimpleDateFormat _sdfWatchTime = new SimpleDateFormat("HH:mm");
+    //*****************************************************************************************
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +159,7 @@ public class Contador extends WearableActivity {
 
         //Evitar que entre en suspensión tras unos segundos
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
     }
 
     // Detectar pulsaciones largas
@@ -172,9 +181,9 @@ public class Contador extends WearableActivity {
     public void onEnterAmbient(Bundle ambientDetails) {
         super.onEnterAmbient(ambientDetails);
 
-        Calendar c = Calendar.getInstance();
+        /*Calendar c = Calendar.getInstance();
         c.setTime(new Date());
-        hora.setText(c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE));
+        hora.setText(c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE));*/
         hora.setVisibility(View.VISIBLE);
 
         misPuntos.setTypeface(fuenteFina);
@@ -219,5 +228,27 @@ public class Contador extends WearableActivity {
 
         susSets.setTypeface(fuenteNormal);
         susSets.getPaint().setAntiAlias(true);
+    }
+
+    //Para actualizar la hora en modo ambiente
+    @Override
+    public void onStart() {
+        super.onStart();
+        _broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context ctx, Intent intent) {
+                if (intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0)
+                    hora.setText(_sdfWatchTime.format(new Date()));
+            }
+        };
+
+        registerReceiver(_broadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (_broadcastReceiver != null)
+            unregisterReceiver(_broadcastReceiver);
     }
 }
