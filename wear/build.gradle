@@ -27,4 +27,5 @@ dependencies {
     implementation 'com.android.support:wear:27.1.1'
     compileOnly 'com.google.android.wearable:wearable:2.4.0'
     implementation project(':comun')
+    implementation 'com.google.android.support:wearable:2.4.0'
 }
