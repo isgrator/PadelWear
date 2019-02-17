@@ -86,7 +86,7 @@ public class MainActivity extends WearableActivity {
                     for (Node nodo : nodos) {
                         Task<Integer> task =
                                 //Wearable.getMessageClient(getApplicationContext()).sendMessage(nodo.getId(),WEAR_MANDAR_TEXTO,texto.getBytes());
-                                Wearable.getMessageClient(getApplicationContext()).sendMessage(nodo.getId(),WEAR_ARRANCAR_ACTIVIDAD,texto.getBytes());
+                                Wearable.getMessageClient(getApplicationContext()).sendMessage(nodo.getId(),  path,  texto.getBytes());
                         //Verificar si se ha enviado el mensaje
                         task.addOnSuccessListener(new OnSuccessListener<Integer>() {
                             @Override public void onSuccess(Integer i) {
